@@ -4,7 +4,7 @@ const _ = require("lodash");
 const jwt = require("jsonwebtoken");
 const { JWT, MASTER } = require("../config/authConstant");
 const { MESSAGE } = require(`../config/message`);
-const {createMessage}=require("../config/sms")
+
 module.exports = {
   changePassword: async (user, currentPassword, newPassword) => {
     try {
