@@ -160,24 +160,31 @@ The backend uses Factory pattern and has several services located in the `servic
 
 The following API endpoints are currently implemented:
 
-### Authentication
-- POST `/auth`
 
-### Users
-- GET `/users`:
 
-### Tasks
-- GET `/tasks`
-
-### Transactions
-- GET `/transactions`
-
-### Memberships
-- GET `/memberships`
-
-### Feedback
-- GET `/feedback`
-
+| HTTP Method | Endpoint                     | Description                                                         |
+|-------------|------------------------------|---------------------------------------------------------------------|
+| POST        | /auth/login                  | Registers a new user                                                |
+| POST        | /auth/register               | Logs in an existing user                                             |
+| PUT         | /auth/reset-password         | Sends a OTP to reset password to the user's registered email address  |
+| PUT         | /auth/verify-reset-password  | Verifies the reset password token and allows the user to set a new password |
+| PUT         | /auth/reset-otp-password     | Resets the user's password using a one-time password (OTP)           |
+| PUT         | /auth/verify-email           | Verifies the user's email address                                     |
+| PUT         | /auth/verify-phone           | Verifies the user's phone number                                      |
+| PUT         | /auth/send-email-otp         | Sends an OTP to the user's registered email address for verification |
+| PUT         | /auth/send-phone-otp         | Sends an OTP to the user's registered phone number for verification  |
+| GET         | /user/profile                | Gets the user's profile information                                   |
+| PUT         | /user/update-profile         | Updates the user's profile information                                |
+| PUT         | /user/change-password        | Allows the user to change their password                              |
+| POST        | /user/findAll                | Gets a list of all users                                             |
+| POST        | /task/create                 | Creates a new task                                                   |
+| POST        | /task/findAll                | Gets a list of all tasks                                             |
+| PATCH       | /task/updateTaskList         | Updates the task list for a specific task                             |
+| PUT         | /task/update                 | Updates the details of a specific task                                |
+| POST        | /transaction/create          | Creates a new transaction                                            |
+| POST        | /membership/create           | Creates a new membership                                              |
+| POST        | /membership/findAll          | Finds memberships that match the specified search criteria           |
+| PUT         | /feedback/add-feedback       | Adds feedback for a specific task or transaction                      |
 
 
 ## Contributing
