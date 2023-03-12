@@ -24,8 +24,17 @@ exports.failureResponse = (data, res) => {
   });
 };
 
+exports.failureFeedback = (data, res) => {
+  const responseData = {
+    DATA: data && data.data ? data.data : {},
+    STATUS: "FAILURE",
+    MESSAGE: data && data.message ? data.message : res.message,
+  };
+  return res.status(responseStatusCode.validationError).json(responseData);
+};
+
 exports.isDuplicate = (data, res) => {
-  res.MESSAGE = "already exists";
+  res.MESSAGE = "User already exists";
   return res.status(responseStatusCode.validationError).json({
     STATUS: "FAILURE",
     MESSAGE: "already exists",
@@ -43,7 +52,7 @@ exports.recordNotFound = (data, res) => {
 exports.loginSuccess = (result, res) => {
   return res.status(responseStatusCode.success).json({
     STATUS: "SUCCESS",
-    MESSAGE: "Welcome back to Look me Up",
+    MESSAGE: "Welcome back to SettleOut",
     DATA: result,
   });
 };
@@ -84,6 +93,6 @@ exports.inValidParam = (message, res) => {
 exports.resetPassword = (res) => {
   return res.status(responseStatusCode.success).json({
     STATUS: "SUCCESS",
-    MESSAGE: res.message ? res.message : "RESET PASSWORD",
+    MESSAGE: res.message ? res.message : "Your password has been successful updated",
   });
 };

@@ -1,4 +1,5 @@
 const User = require("../model/user");
+const service = require("../utils/dbService");
 
 module.exports = {
   addfeedback: async (agentId, userId, feedback, rating) => {
@@ -9,5 +10,17 @@ module.exports = {
       console.error(error);
       throw error;
     }
-  }
+  },
+  findAll: async (userId) => {
+    try {
+      const user = await service.getSingleDocumentById(User, userId); 
+      if (!user) {
+        return "There is no data";
+      } 
+      return user.feedback;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  },
 };

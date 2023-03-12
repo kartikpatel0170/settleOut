@@ -28,9 +28,6 @@ const schema = new Schema({
     lastName: {
         type: String,
     },
-    profilePicture: {
-        type: String,
-    },
     email: {
         type: String,
     },
