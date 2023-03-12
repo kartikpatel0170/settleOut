@@ -1,16 +1,19 @@
 const Membership = require("../model/membership");
 const service = require("../utils/dbService");
+const MembershipFactory = require("./membershipFactory")
 
 module.exports = {
-  create: async (body) => {
+  create: async (body, type) => {
     try {
-      let result = await service.createDocument(Membership, body);
+      const membership = MembershipFactory.createMembership(type, body);
+      let result = await membership.save();
       return result;
     } catch (error) {
       console.error(error);
       throw error;
     }
   },
+
   findAll:async(query,options)=>{
     try
     {
