@@ -13,6 +13,7 @@ Welcome to the Settleout backend repository. This repository contains the backen
 - [Models](#models)
 - [Observers](#observers)
 - [Services](#services)
+- [Utils](#utils)
 - [API Endpoints](#api-endpoints)
 - [Contributing](#contributing)
 - [License](#license)
@@ -28,7 +29,7 @@ To install the dependencies for the backend, run the following command:
     - Copy the contents of `.env.example` into `.env` and fill in the required values.
 4. Start the server: `npm start`
 5. Navigate to `http://localhost:3000` in your browser to view the API documentation.
-
+6. Backend is deployed to `https://settleout-backend-production.up.railway.app/` using railway.app service.
 ## Technologies Used
 
 The following technologies were used in the development of the backend:
@@ -39,6 +40,8 @@ The following technologies were used in the development of the backend:
 - Mongoose
 - Passport.js
 - Stripe
+- Twilio
+- SendGrid/@mail
 
 
 ## Project Directory Structure
@@ -66,9 +69,7 @@ Below is the directory structure of the project:
 │   ├── transaction.js
 │   └── user.js
 ├── observers/
-│   ├── userObserver.js
-│   ├── paymentObserver.js
-│   └── taskObserver.js
+│   └── membershipObserver.js
 ├── routes/
 │   ├── auth.js
 │   ├── feedback.js
@@ -83,9 +84,19 @@ Below is the directory structure of the project:
 │   │   └── stripeHandler.js
 │   ├── auth.js
 │   ├── feedback.js
+|   ├── membership.js
+|   ├── membershipFactory.js
 │   ├── task.js
 │   ├── transaction.js
 │   └── user.js
+├── utils/
+│   ├── validation/
+│   │   ├── authValidation.js
+│   │   └── userValidation.js
+│   ├── dbService.js
+│   ├── messages.js
+|   ├── responseCode.js
+|   └── validateRequest.js
 ├── server.js
 └── package.json
 ```
@@ -139,10 +150,7 @@ The backend has several models located in the `model/` directory. These models i
 
 The backend uses the observer pattern to notify users of certain events. Observers are located in the `observers/` directory and include:
 
-- `userObserver.js`: Observes user-related events.
-- `paymentObserver.js`: Observes payment-related events.
-- `taskObserver.js`: Observes task-related events.
-
+- `membershipObserver.js`: Observes membership-related events.
 
 ## Services
 
@@ -151,9 +159,20 @@ The backend uses Factory pattern and has several services located in the `servic
 - `payment/`: Contains logic for handling payments.
 - `auth.js`: Contains logic for user authentication.
 - `feedback.js`: Contains logic for handling user feedback.
+- `membership.js`: Contains logic for membership .
+- `membershipFactory.js`: Contains logic for factory design pattern for memberships.
 - `task.js`: Contains logic for managing tasks.
 - `transaction.js`: Contains logic for managing transactions.
 - `user.js`: Contains logic for managing users.
+
+## Utils
+The backend has serveral utils located in the `utils/` directory and it includes:
+
+- `validation/`: Contains logic for basic validaiton.
+- `dbService.js/`: Contains logic database manipulation.
+- `messages.js/`: Contains information about response messages.
+- `responseCode.js/`: Contains information about respones codes.
+- `validateRequest.js/`: Contains logic for validating requests.
 
 
 ## API Endpoints
@@ -166,16 +185,8 @@ The following API endpoints are currently implemented:
 |-------------|------------------------------|---------------------------------------------------------------------|
 | POST        | /auth/login                  | Registers a new user                                                |
 | POST        | /auth/register               | Logs in an existing user                                             |
-| PUT         | /auth/reset-password         | Sends a OTP to reset password to the user's registered email address  |
-| PUT         | /auth/verify-reset-password  | Verifies the reset password token and allows the user to set a new password |
-| PUT         | /auth/reset-otp-password     | Resets the user's password using a one-time password (OTP)           |
-| PUT         | /auth/verify-email           | Verifies the user's email address                                     |
-| PUT         | /auth/verify-phone           | Verifies the user's phone number                                      |
-| PUT         | /auth/send-email-otp         | Sends an OTP to the user's registered email address for verification |
-| PUT         | /auth/send-phone-otp         | Sends an OTP to the user's registered phone number for verification  |
 | GET         | /user/profile                | Gets the user's profile information                                   |
 | PUT         | /user/update-profile         | Updates the user's profile information                                |
-| PUT         | /user/change-password        | Allows the user to change their password                              |
 | POST        | /user/findAll                | Gets a list of all users                                             |
 | POST        | /task/create                 | Creates a new task                                                   |
 | POST        | /task/findAll                | Gets a list of all tasks                                             |
@@ -184,8 +195,23 @@ The following API endpoints are currently implemented:
 | POST        | /transaction/create          | Creates a new transaction                                            |
 | POST        | /membership/create           | Creates a new membership                                              |
 | POST        | /membership/findAll          | Finds memberships that match the specified search criteria           |
-| PUT         | /feedback/add-feedback       | Adds feedback for a specific task or transaction                      |
 
+
+
+
+The following API endpoints are currently implemented but not used in frontend:
+
+| HTTP Method | Endpoint                     | Description                                                         |
+|-------------|------------------------------|---------------------------------------------------------------------|
+| PUT         | /auth/reset-password         | Sends a OTP to reset password to the user's registered email address  |
+| PUT         | /auth/verify-reset-password  | Verifies the reset password token and allows the user to set a new password |
+| PUT         | /auth/reset-otp-password     | Resets the user's password using a one-time password (OTP)           |
+| PUT         | /auth/verify-email           | Verifies the user's email address                                     |
+| PUT         | /auth/verify-phone           | Verifies the user's phone number                                      |
+| PUT         | /auth/send-email-otp         | Sends an OTP to the user's registered email address for verification |
+| PUT         | /auth/send-phone-otp         | Sends an OTP to the user's registered phone number for verification  |
+| PUT         | /feedback/add-feedback       | Adds feedback for a specific task or transaction                      |
+| PUT         | /user/change-password        | Allows the user to change their password                              |
 
 ## Contributing
 
