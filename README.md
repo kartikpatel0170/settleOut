@@ -63,6 +63,8 @@ Below is the directory structure of the project:
 │   ├── taskController.js
 │   └── userController.js
 │   └── transactionController.js
+├── middleware/
+│   └── auth.js
 ├── model/
 │   ├── membership.js
 │   ├── task.js
