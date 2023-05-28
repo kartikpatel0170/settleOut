@@ -2,21 +2,13 @@ const membershipService = require("../services/membership");
 const util = require("../utils/messages");
 const { MESSAGE } = require("../config/message");
 const Membership = require("../model/membership");
-const membershipObserver = require("../observers/MembershipObserver");
-
-
-// Register the observer with the Membership model
 
 module.exports = {
   create: async (req, res) => {
     try {
       let result = await membershipService.create(req.body);
-      membershipService.addObserver(req.user.id);
       
       if (result) {
-        // notify all observers
-        Membership.notifyObservers(result, req.user.id);
-
         return util.successResponse(result, res);
       } else {
         return util.failureResponse(MESSAGE.BAD_REQUEST, res);
