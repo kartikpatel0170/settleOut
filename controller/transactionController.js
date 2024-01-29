@@ -7,7 +7,7 @@ module.exports = {
   async create(req, res) {
     try {
       const { userId, cardDetails, amount, membershipId, agentId } = req.body;
-      const result = await transactionService.create(
+      const result = await transactionService.createMembership(
         userId,
         cardDetails,
         amount,

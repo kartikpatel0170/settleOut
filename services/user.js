@@ -1,59 +1,48 @@
 const User = require("../model/user");
 const service = require("../utils/dbService");
-const _ = require("lodash");
-const jwt = require("jsonwebtoken");
-const { JWT, MASTER } = require("../config/authConstant");
 const { MESSAGE } = require(`../config/message`);
 const logger = require("../config/logger");
 
-module.exports = {
-  changePassword: async (user, currentPassword, newPassword) => {
+class UserService {
+  async changePassword(user, currentPassword, newPassword) {
     try {
       const isPasswordMatched = await user.isPasswordMatch(currentPassword);
       if (isPasswordMatched) {
-        await service.findOneAndUpdateDocument(
-          User,
-          { _id: user._id },
-          { password: newPassword }
-        );
+        await service.findOneAndUpdateDocument(User, { _id: user._id }, { password: newPassword });
         return true;
       } else {
         return false;
       }
     } catch (error) {
-      logger.error("Error in changePassword", error);
-      throw error;
+      logger.error("Error in changePassword", { userId: user._id, error });
+      throw new Error(MESSAGE.INTERNAL_SERVER_ERROR);
     }
-  },
+  }
 
-  updateProfile: async (userId, body) => {
+  async updateProfile(userId, body) {
     try {
-      let userData = await service.findOneAndUpdateDocument(
-        User,
-        { _id: userId },
-        body,
-        { new: true }
-      );
+      let userData = await service.findOneAndUpdateDocument(User, { _id: userId }, body, { new: true });
+
       if (body.bio) {
-        await createMessage(
-          userData.phone.phone,
-          "We have received your request to upgrade your account. Thank you"
-        );
+        await createMessage(userData.phone.phone, "We have received your request to upgrade your account. Thank you");
       }
+
       return userData.toJSON();
     } catch (error) {
-      logger.error("Error in updateProfile", error);
-      throw error;
+      logger.error("Error in updateProfile", { userId, error });
+      throw new Error(MESSAGE.INTERNAL_SERVER_ERROR);
     }
-  },
+  }
 
-  findAll: async (query, options) => {
+  async findAll(query, options) {
     try {
       let result = await service.getAllDocuments(User, query, options);
       return result;
     } catch (error) {
-      logger.error("Error in findAll", error);
-      throw error;
+      logger.error("Error in findAll", { error });
+      throw new Error(MESSAGE.INTERNAL_SERVER_ERROR);
     }
   }
-};
+}
+
+module.exports = new UserService();

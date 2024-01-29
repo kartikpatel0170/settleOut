@@ -1,7 +1,9 @@
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
 
-const stripeSingleton = {
-  instance: null,
+class StripeHandler {
+  constructor() {
+    this.instance = null;
+  }
 
   async createInstance() {
     if (!this.instance) {
@@ -9,31 +11,31 @@ const stripeSingleton = {
     }
     return this.instance;
   }
-};
 
-module.exports = {
   async getStripeObject() {
     try {
-      const stripe = await stripeSingleton.createInstance();
+      const stripe = await this.createInstance();
       return stripe;
     } catch (error) {
       throw new Error(error);
     }
-  },
+  }
 
   async getToken(cardDetails) {
     try {
-      const instance = await stripeSingleton.createInstance();
+      const instance = await this.createInstance();
       return await instance.tokens.create({
         card: {
           number: cardDetails.number,
           exp_month: cardDetails.exp_month,
           exp_year: cardDetails.exp_year,
-          cvc: cardDetails.cvc
-        }
+          cvc: cardDetails.cvc,
+        },
       });
     } catch (error) {
       throw new Error(error);
     }
   }
-};
+}
+
+module.exports = new StripeHandler();
