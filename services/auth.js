@@ -7,6 +7,8 @@ const { MESSAGE } = require(`../config/message`);
 const PaymentService = require("../services/payment/stripe");
 const { createMessage } = require("../config/sms");
 const { createEmail } = require("../config/email");
+const logger = require("../config/logger");
+
 async function generateToken(id, email, secret) {
   return jwt.sign(
     {
@@ -49,7 +51,7 @@ const loginUser = async (email, password, req) => {
       throw MESSAGE.EMAIL_NOT_EXISTS;
     }
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     throw error;
   }
 };
@@ -68,7 +70,7 @@ const registration = async (body) => {
     result.token = await generateToken(result._id, body.email, JWT.SECRET);
     return result;
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     throw error;
   }
 };
@@ -92,7 +94,7 @@ const resetPassword = async (email) => {
       throw MESSAGE.EMAIL_NOT_EXISTS;
     }
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     throw error;
   }
 };
@@ -111,7 +113,7 @@ const verifyResetPassword = async (email, OTP) => {
       throw MESSAGE.EMAIL_NOT_EXISTS;
     }
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     throw error;
   }
 };
@@ -146,7 +148,7 @@ const verifyOTPAndPassword = async (email, OTP, password) => {
       throw MESSAGE.EMAIL_NOT_EXISTS;
     }
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     throw error;
   }
 };
@@ -178,7 +180,7 @@ const verifyEmail = async (email, OTP) => {
       throw MESSAGE.EMAIL_NOT_EXISTS;
     }
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     throw error;
   }
 };
@@ -210,7 +212,7 @@ const verifyPhone = async (email, OTP) => {
       throw MESSAGE.EMAIL_NOT_EXISTS;
     }
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     throw error;
   }
 };
@@ -240,7 +242,7 @@ const sendEmailOtp = async (email) => {
       throw MESSAGE.EMAIL_NOT_EXISTS;
     }
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     throw error;
   }
 };
@@ -268,7 +270,7 @@ const sendPhoneOtp = async (email) => {
       throw MESSAGE.EMAIL_NOT_EXISTS;
     }
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     throw error;
   }
 };

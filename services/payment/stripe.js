@@ -1,5 +1,6 @@
 const StripeHandler = require("./stripeHandler");
 const User = require("../../model/user");
+const logger = require("../../config/logger");
 
 module.exports = {
   async createCustomer(userId, email) {
@@ -20,7 +21,7 @@ module.exports = {
 
       return true;
     } catch (error) {
-      console.error("Error - createCustomer", error);
+      logger.error("Error - createCustomer", error);
       throw new Error(error);
     }
   },
@@ -34,7 +35,7 @@ module.exports = {
         source: cardToken.id
       });
     } catch (error) {
-      console.error("Error - addCardToCustomer", error);
+      logger.error("Error - addCardToCustomer", error);
       throw new Error(error);
     }
   },
@@ -56,6 +57,7 @@ module.exports = {
       });
       return chargeObj;
     } catch (error) {
+      logger.error("Error - chargeMembership", error);
       throw error;
     }
   }
