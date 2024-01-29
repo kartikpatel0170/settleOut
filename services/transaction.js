@@ -2,10 +2,12 @@ const Membership = require("../model/membership");
 const PaymentService = require("./payment/stripe");
 const service = require("../utils/dbService");
 const taskService = require("./task");
+const logger = require("../config/logger");
+
 module.exports = {
-  create: async (userId, cardDetails, amount, membershipId,agentId) => {
+  create: async (userId, cardDetails, amount, membershipId, agentId) => {
     try {
-      // let membershipData=await Membership.findById(membershipId)
+      // let membershipData = await Membership.findById(membershipId);
       let result = await PaymentService.chargeMembership(
         userId,
         cardDetails,
@@ -14,8 +16,8 @@ module.exports = {
       await taskService.create(membershipId, agentId, userId);
       return result;
     } catch (error) {
-      console.error(error);
+      logger.error("Error in createMembership", error);
       throw error;
     }
-  },
+  }
 };

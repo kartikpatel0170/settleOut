@@ -1,6 +1,7 @@
 const mongoose = require("../config/db");
 const mongoosePaginate = require("mongoose-paginate-v2");
-var idValidator = require("mongoose-id-validator");
+const idValidator = require("mongoose-id-validator");
+const logger = require("../config/logger");
 
 const myCustomLabels = {
   totalDocs: "itemCount",
@@ -11,43 +12,38 @@ const myCustomLabels = {
   prevPage: "prev",
   totalPages: "pageCount",
   pagingCounter: "slNo",
-  meta: "paginator",
+  meta: "paginator"
 };
-mongoosePaginate.paginate.options = {
-  customLabels: myCustomLabels,
-};
-const Schema = mongoose.Schema;
 
-const schema = new Schema(
+mongoosePaginate.paginate.options = {
+  customLabels: myCustomLabels
+};
+
+const { Schema, model } = mongoose;
+
+const membershipSchema = new Schema(
   {
-    price: {
-      type: Number,
-    },
-    services: [
-      {
-        type: String,
-      },
-    ],
+    price: Number,
+    services: [String],
     featured: {
       type: Boolean,
-      default: false,
+      default: false
     },
-    name:{
-      type:String
-    }
+    name: String
   },
   {
     timestamps: {
       createdAt: "createdAt",
-      updatedAt: "updatedAt",
-    },
+      updatedAt: "updatedAt"
+    }
   }
 );
 
+membershipSchema.plugin(mongoosePaginate);
+membershipSchema.plugin(idValidator);
 
-schema.plugin(mongoosePaginate);
-schema.plugin(idValidator);
+const Membership = model("Membership", membershipSchema, "Membership");
 
-const Membership = mongoose.model('Membership', schema, 'Membership');
+logger.info("Membership model created and configured");
 
 module.exports = Membership;

@@ -6,6 +6,6 @@ const { authentication } = require("../middleware/auth");
 routes.get("/profile", userController.getProfile);
 routes.put("/update-profile", userController.updateProfile);
 routes.put("/change-password", userController.changePassword);
-routes.post("/findAll", userController.findAll)
+routes.post("/findAll", userController.findAll);
 
 module.exports = routes;

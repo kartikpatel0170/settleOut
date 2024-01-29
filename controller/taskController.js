@@ -1,12 +1,13 @@
 const taskService = require("../services/task");
 const util = require("../utils/messages");
+const logger = require("../config/logger");
 const { MESSAGE } = require("../config/message");
 
 module.exports = {
-  create: async (req, res) => {
+  async create(req, res) {
     try {
-        let {membershipId,agentId,userId}=req.body
-      let result = await taskService.create(membershipId,agentId,userId);
+      const { membershipId, agentId, userId } = req.body;
+      const result = await taskService.create(membershipId, agentId, userId);
 
       if (result) {
         return util.successResponse(result, res);
@@ -14,59 +15,58 @@ module.exports = {
         return util.failureResponse(MESSAGE.BAD_REQUEST, res);
       }
     } catch (error) {
-      console.error("Error - login", error);
+      logger.error("Error - create task", error);
       return util.failureResponse(error, res);
     }
   },
-  findAll: async (req, res) => {
+
+  async findAll(req, res) {
     try {
-        let { query, options } = req.body;
-        if (!query) {
-          query = {};
-        }
-        if (!options) {
-          options = {};
-        }
-      let result = await taskService.findAll(query, options );
-      
+      let { query, options } = req.body;
+      query = query || {};
+      options = options || {};
+      const result = await taskService.findAll(query, options);
+
       if (result) {
         return util.successResponse(result, res);
       } else {
         return util.failureResponse(MESSAGE.BAD_REQUEST, res);
       }
     } catch (error) {
-      console.error("Error - login", error);
+      logger.error("Error - find all tasks", error);
       return util.failureResponse(error, res);
     }
   },
-  updateTaskList: async (req, res) => {
+
+  async updateTaskList(req, res) {
     try {
-        let {name, taskId}=req.body
-      let result = await taskService.updateCheckBox(name, taskId)
-      
+      const { name, taskId } = req.body;
+      const result = await taskService.updateCheckBox(name, taskId);
+
       if (result) {
         return util.successResponse(result, res);
       } else {
         return util.failureResponse(MESSAGE.BAD_REQUEST, res);
       }
     } catch (error) {
-      console.error("Error - login", error);
+      logger.error("Error - update task list", error);
       return util.failureResponse(error, res);
     }
   },
-  update: async (req, res) => {
+
+  async update(req, res) {
     try {
-        let { taskId,...body}=req.body
-      let result = await taskService.update(body, taskId)
-      
+      const { taskId, ...body } = req.body;
+      const result = await taskService.update(body, taskId);
+
       if (result) {
         return util.successResponse(result, res);
       } else {
         return util.failureResponse(MESSAGE.BAD_REQUEST, res);
       }
     } catch (error) {
-      console.error("Error - login", error);
+      logger.error("Error - update task", error);
       return util.failureResponse(error, res);
     }
-  },
+  }
 };

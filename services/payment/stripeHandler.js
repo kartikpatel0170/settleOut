@@ -1,34 +1,39 @@
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
 
-let Singleton = {
+const stripeSingleton = {
+  instance: null,
+
   async createInstance() {
-    let instance = await require("stripe")(STRIPE_SECRET_KEY);
-    return instance;
-  },
+    if (!this.instance) {
+      this.instance = await require("stripe")(STRIPE_SECRET_KEY);
+    }
+    return this.instance;
+  }
 };
 
 module.exports = {
   async getStripeObject() {
     try {
-      let stripe = await Singleton.createInstance();
+      const stripe = await stripeSingleton.createInstance();
       return stripe;
-    } catch (e) {
-      throw new Error(e);
+    } catch (error) {
+      throw new Error(error);
     }
   },
+
   async getToken(cardDetails) {
-    let instance = await require("stripe")(STRIPE_SECRET_KEY);
-    return await instance.tokens.create(
-      {
+    try {
+      const instance = await stripeSingleton.createInstance();
+      return await instance.tokens.create({
         card: {
           number: cardDetails.number,
           exp_month: cardDetails.exp_month,
           exp_year: cardDetails.exp_year,
-          cvc: cardDetails.cvc,
-       
-        },
-      }
-    );
-  },
+          cvc: cardDetails.cvc
+        }
+      });
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 };
-

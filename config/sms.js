@@ -2,6 +2,7 @@ const accountSid = process.env.TWILIO_ACC_SID; // Your Account SID from www.twil
 const authToken = process.env.TWILIO_ACC_TOKEN; // Your Auth Token from www.twilio.com/console
 
 const client = require("twilio")(accountSid, authToken);
+const logger = require("./logger");
 
 const createMessage = async (to, body) => {
   try {
@@ -9,14 +10,16 @@ const createMessage = async (to, body) => {
       .create({
         body: body,
         to: "+1" + to, // Text this number
-        from: "+16479311399", // From a valid Twilio number
+        from: "+16479311399" // From a valid Twilio number
       })
       .then((message) => console.log(message.sid));
+
+    logger.info(`Twilio message sent: ${message.sid}`);
   } catch (error) {
-    console.error(error);
+    logger.error(`Error sending Twilio message: ${error.message}`);
   }
 };
 
 module.exports = {
-  createMessage,
+  createMessage
 };
