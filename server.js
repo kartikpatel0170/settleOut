@@ -8,6 +8,7 @@ const cookieParser = require("cookie-parser");
 const logger = require("./config/logger");
 const { JWT } = require("./config/authConstant");
 const helmet = require("helmet");
+const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
 
 const app = express();
@@ -30,11 +31,11 @@ app.use(
   })
 );
 app.use(session({ secret: JWT.SECRET, saveUninitialized: true, resave: true }));
-app.use(logRequests);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors());
+app.use(morgan("combined", { stream: logger.stream }));
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -67,11 +68,6 @@ server.listen(PORT, () => {
   logger.info(`Your application is running on http://localhost:${PORT}`);
 });
 
-// Custom middleware to log incoming requests
-function logRequests(req, res, next) {
-  logger.info(`${req.method} ${req.originalUrl}`);
-  next();
-}
 
 // Custom middleware to log errors
 function logErrors(err, req, res, next) {
