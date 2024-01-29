@@ -10,52 +10,52 @@ const myCustomLabels = {
   prevPage: "prev",
   totalPages: "pageCount",
   pagingCounter: "slNo",
-  meta: "paginator",
+  meta: "paginator"
 };
 mongoosePaginate.paginate.options = {
-  customLabels: myCustomLabels,
+  customLabels: myCustomLabels
 };
 const Schema = mongoose.Schema;
 const schema = new Schema(
   {
     userId: {
       type: Schema.Types.ObjectId,
-      ref: "user",
+      ref: "user"
     },
     agentId: {
       type: Schema.Types.ObjectId,
-      ref: "user",
+      ref: "user"
     },
     services: [
       {
         name: {
-          type: String,
+          type: String
         },
         status: {
-          type: String,
+          type: String
         },
         completedAt: {
-          type: Date,
-        },
-      },
+          type: Date
+        }
+      }
     ],
-    status:{
-      type:String,
-      default:"Ordered"
+    status: {
+      type: String,
+      default: "Ordered"
     },
     membershipId: {
       type: Schema.Types.ObjectId,
-      ref: "Membership",
+      ref: "Membership"
     },
     comment: {
-      type: String,
-    },
+      type: String
+    }
   },
   {
     timestamps: {
       createdAt: "createdAt",
-      updatedAt: "updatedAt",
-    },
+      updatedAt: "updatedAt"
+    }
   }
 );
 

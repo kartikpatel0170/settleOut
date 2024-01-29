@@ -20,10 +20,11 @@ module.exports = {
         return false;
       }
     } catch (error) {
-      console.error(error);
+      logger.error("Error in changePassword", error);
       throw error;
     }
   },
+
   updateProfile: async (userId, body) => {
     try {
       let userData = await service.findOneAndUpdateDocument(
@@ -32,13 +33,15 @@ module.exports = {
         body,
         { new: true }
       );
-      if(body.bio )
-      {
-        await createMessage(userData.phone.phone,"We have received your request to upgrade your account. Thank you")
+      if (body.bio) {
+        await createMessage(
+          userData.phone.phone,
+          "We have received your request to upgrade your account. Thank you"
+        );
       }
       return userData.toJSON();
     } catch (error) {
-      console.error(error);
+      logger.error("Error in updateProfile", error);
       throw error;
     }
   },
@@ -48,8 +51,8 @@ module.exports = {
       let result = await service.getAllDocuments(User, query, options);
       return result;
     } catch (error) {
-      console.error(error);
+      logger.error("Error in findAll", error);
       throw error;
     }
-  },
+  }
 };
