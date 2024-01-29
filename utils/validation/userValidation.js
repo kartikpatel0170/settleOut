@@ -7,13 +7,12 @@ exports.schemaKeys = {
   dob: joi.date(),
   phone: {
     countryCode: joi.string(),
-    phone: joi.string(),
+    phone: joi.string()
   },
   accountType: joi.string(),
-  profilePicture:joi.string()
+  profilePicture: joi.string()
 };
 exports.changePassword = {
   currentPassword: joi.string().required(),
-  newPassword: joi.string().required(),
+  newPassword: joi.string().required()
 };
- 

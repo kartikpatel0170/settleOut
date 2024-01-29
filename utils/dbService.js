@@ -50,7 +50,12 @@ const getDocumentByQuery = (model, where, select = []) =>
     });
   });
 
-const findOneAndUpdateDocument = (model, filter, data, options = {new:true}) =>
+const findOneAndUpdateDocument = (
+  model,
+  filter,
+  data,
+  options = { new: true }
+) =>
   new Promise((resolve, reject) => {
     model.findOneAndUpdate(filter, data, options, (err, result) => {
       if (err) reject(err);
@@ -58,7 +63,7 @@ const findOneAndUpdateDocument = (model, filter, data, options = {new:true}) =>
     });
   });
 
-const findOneAndDeleteDocument = (model, filter, options = {new:true}) =>
+const findOneAndDeleteDocument = (model, filter, options = { new: true }) =>
   new Promise((resolve, reject) => {
     model.findOneAndDelete(filter, options, (err, data) => {
       if (err) reject(err);
@@ -68,7 +73,7 @@ const findOneAndDeleteDocument = (model, filter, options = {new:true}) =>
 
 const findUser = async (email) => {
   const findUser = await user.findOne({
-    email: email,
+    email: email
   });
   return findUser;
 };
@@ -82,5 +87,5 @@ module.exports = {
   getDocumentByQuery,
   findOneAndUpdateDocument,
   findOneAndDeleteDocument,
-  findUser,
+  findUser
 };
