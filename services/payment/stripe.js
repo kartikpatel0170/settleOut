@@ -2,20 +2,20 @@ const StripeHandler = require("./stripeHandler");
 const User = require("../../model/user");
 const logger = require("../../config/logger");
 
-module.exports = {
+class PaymentService {
   async createCustomer(userId, email) {
     try {
       const stripeObj = await StripeHandler.getStripeObject();
       const customer = await stripeObj.customers.create({
-        email: email
+        email: email,
       });
 
       await User.updateOne(
         {
-          _id: userId
+          _id: userId,
         },
         {
-          stripeCustomerId: customer.id
+          stripeCustomerId: customer.id,
         }
       );
 
@@ -24,7 +24,7 @@ module.exports = {
       logger.error("Error - createCustomer", error);
       throw new Error(error);
     }
-  },
+  }
 
   async addCardToCustomer(customerId, cardDetails) {
     try {
@@ -32,15 +32,14 @@ module.exports = {
       const cardToken = await StripeHandler.getToken(cardDetails);
 
       return await stripeObj.customers.createSource(customerId, {
-        source: cardToken.id
+        source: cardToken.id,
       });
     } catch (error) {
       logger.error("Error - addCardToCustomer", error);
       throw new Error(error);
     }
-  },
+  }
 
-  /* eslint-disable */
   async chargeMembership(userId, cardDetails, amount) {
     try {
       const user = await User.findOne({ _id: userId });
@@ -53,7 +52,7 @@ module.exports = {
         amount: amount,
         currency: "cad",
         customer: user.stripeCustomerId,
-        card: cardId.id
+        card: cardId.id,
       });
       return chargeObj;
     } catch (error) {
@@ -61,4 +60,6 @@ module.exports = {
       throw error;
     }
   }
-};
+}
+
+module.exports = new PaymentService();

@@ -2,13 +2,12 @@ const membershipService = require("../services/membership");
 const util = require("../utils/messages");
 const logger = require("../config/logger");
 const { MESSAGE } = require("../config/message");
-const Membership = require("../model/membership");
 
 module.exports = {
   async create(req, res) {
     try {
-      const result = await membershipService.create(req.body);
-
+      const result = await membershipService.createMembership(req.body);
+      
       if (result) {
         return util.successResponse(result, res);
       } else {
@@ -19,14 +18,14 @@ module.exports = {
       return util.failureResponse(error, res);
     }
   },
-
+  
   async findAll(req, res) {
     try {
       let { query, options } = req.body;
       query = query || {};
       options = options || {};
-
-      const result = await membershipService.findAll(query, options);
+      
+      const result = await membershipService.findAllMemberships(query, options);
 
       if (result) {
         return util.successResponse(result, res);
@@ -37,5 +36,5 @@ module.exports = {
       logger.error("Error - findAll membership", error);
       return util.failureResponse(error, res);
     }
-  }
+  },
 };

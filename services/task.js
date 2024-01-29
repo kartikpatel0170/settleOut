@@ -4,40 +4,41 @@ const _ = require("lodash");
 const service = require("../utils/dbService");
 const logger = require("../config/logger");
 
-module.exports = {
-  create: async (membershipId, agentId, userId) => {
+class TaskService {
+  async createTask(membershipId, agentId, userId) {
     try {
       const membershipData = await service.getSingleDocumentById(
         Membership,
         membershipId
       );
       const serviceData = _.map(membershipData.services, (doc) => ({
-        name: doc
+        name: doc,
       }));
       const data = {
         services: serviceData,
         membershipId,
         agentId,
-        userId
+        userId,
       };
       const result = await service.createDocument(Task, data);
       return result;
     } catch (error) {
       logger.error("Error in createTask", error);
-      throw error;
+      throw new Error("Failed to create task.");
     }
-  },
+  }
 
-  findAll: async (query, options) => {
+  async findAllTasks(query, options) {
     try {
       const result = await service.getAllDocuments(Task, query, options);
       return result;
     } catch (error) {
       logger.error("Error in findAllTasks", error);
-      throw error;
+      throw new Error("Failed to fetch tasks.");
     }
-  },
-  updateCheckBox: async (name, taskId) => {
+  }
+
+  async updateCheckBox(name, taskId) {
     try {
       const result = await Task.findOneAndUpdate(
         { _id: taskId, "services.name": name },
@@ -45,18 +46,19 @@ module.exports = {
           $set: {
             "services.$.status": "Completed",
             "services.$.completedAt": new Date(),
-            status: "In-progress"
-          }
+            status: "In-progress",
+          },
         },
         { new: true }
       );
       return result;
     } catch (error) {
       logger.error("Error in updateCheckBox", error);
-      throw error;
+      throw new Error("Failed to update checkbox.");
     }
-  },
-  update: async (body, taskId) => {
+  }
+
+  async updateTask(body, taskId) {
     try {
       const result = await service.findOneAndUpdateDocument(
         Task,
@@ -67,7 +69,9 @@ module.exports = {
       return result;
     } catch (error) {
       logger.error("Error in updateTask", error);
-      throw error;
+      throw new Error("Failed to update task.");
     }
   }
-};
+}
+
+module.exports = new TaskService();

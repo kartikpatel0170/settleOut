@@ -7,7 +7,7 @@ module.exports = {
   async create(req, res) {
     try {
       const { membershipId, agentId, userId } = req.body;
-      const result = await taskService.create(membershipId, agentId, userId);
+      const result = await taskService.createTask(membershipId, agentId, userId);
 
       if (result) {
         return util.successResponse(result, res);
@@ -25,7 +25,7 @@ module.exports = {
       let { query, options } = req.body;
       query = query || {};
       options = options || {};
-      const result = await taskService.findAll(query, options);
+      const result = await taskService.findAllTasks(query, options);
 
       if (result) {
         return util.successResponse(result, res);
@@ -57,7 +57,7 @@ module.exports = {
   async update(req, res) {
     try {
       const { taskId, ...body } = req.body;
-      const result = await taskService.update(body, taskId);
+      const result = await taskService.updateTask(body, taskId);
 
       if (result) {
         return util.successResponse(result, res);

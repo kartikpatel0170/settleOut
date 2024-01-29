@@ -7,33 +7,34 @@ module.exports = {
   async create(req, res) {
     try {
       const { agentId, userId, feedback, rating } = req.body;
-      const result = await feedbackService.addfeedback(
-        agentId,
-        userId,
-        feedback,
-        rating
-      );
 
-      if (result) {
-        return util.successResponse(result, res);
-      } else {
-        return util.failureResponse(MESSAGE.BAD_REQUEST, res);
+      // Input validation
+      if (!agentId || !userId || !feedback || !rating) {
+        return util.failureResponse(MESSAGE.BAD_REQUEST, res, 400);
       }
+
+      const result = await feedbackService.addfeedback(agentId, userId, feedback, rating);
+      await util.successResponse(result, res);
     } catch (error) {
       logger.error("Error - create feedback", error);
-      return util.failureResponse(error, res);
+      await util.failureResponse(error?.data || error, res);
     }
   },
 
   async findAll(req, res) {
     try {
       const userId = req.body.userId;
-      const result = await feedbackService.findAll(userId);
 
-      return util.successResponse(result, res);
+      // Input validation
+      if (!userId) {
+        return util.failureResponse(MESSAGE.BAD_REQUEST, res, 400);
+      }
+
+      const result = await feedbackService.findAllFeedback(userId);
+      await util.successResponse(result, res);
     } catch (error) {
       logger.error("Error - findAll feedback", error);
-      return util.failureFeedback(error?.data || error, res);
+      await util.failureFeedback(error?.data || error, res);
     }
   }
 };

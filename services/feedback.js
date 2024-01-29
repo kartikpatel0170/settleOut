@@ -2,8 +2,8 @@ const User = require("../model/user");
 const service = require("../utils/dbService");
 const logger = require("../config/logger");
 
-module.exports = {
-  addFeedback: async (agentId, userId, feedback, rating) => {
+class FeedbackService {
+  async addFeedback(agentId, userId, feedback, rating) {
     try {
       const result = await User.findOneAndUpdate(
         { _id: agentId },
@@ -12,21 +12,21 @@ module.exports = {
             feedback: {
               userId: userId,
               feedback: feedback,
-              date: new Date()
-            }
+              date: new Date(),
+            },
           },
-          $set: { ratings: rating }
+          $set: { ratings: rating },
         },
         { new: true }
       );
       return result;
     } catch (error) {
       logger.error("Error in addFeedback", error);
-      throw error;
+      throw new Error("Failed to add feedback.");
     }
-  },
+  }
 
-  findAll: async (userId) => {
+  async findAllFeedback(userId) {
     try {
       const user = await service.getSingleDocumentById(User, userId);
       if (!user) {
@@ -35,7 +35,9 @@ module.exports = {
       return user.feedback;
     } catch (error) {
       logger.error("Error in findAllFeedback", error);
-      throw error;
+      throw new Error("Failed to fetch feedback.");
     }
   }
-};
+}
+
+module.exports = new FeedbackService();
